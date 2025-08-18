@@ -1,15 +1,13 @@
-# Etapa de build
-FROM maven:3.9.9-eclipse-temurin-17 AS build
+FROM ubuntu:latest AS build
+
+RUN apt-get update && apt-get install -y openjdk-17-jdk maven
 
 WORKDIR /app
-COPY pom.xml .
-RUN mvn dependency:go-offline
-
 COPY . .
+
 RUN mvn clean package -DskipTests
 
-# Etapa de execução
-FROM eclipse-temurin:17-jdk-jammy
+FROM openjdk:17-jdk-slim
 
 WORKDIR /app
 EXPOSE 8080
